@@ -1,0 +1,87 @@
+from tkinter import *
+import sqlite3
+ 
+ 
+# Dies legt die Grösse des GUI's fest.
+root = Tk()
+root.geometry('500x700')
+root.title("Registration Form")
+ 
+# Legt die Variabeln für das GUI fest.
+Fullname = StringVar()
+Email = StringVar()
+var = IntVar()
+c = StringVar()
+var1 = IntVar()
+ 
+# Liste für die Kontinenten Abfrage.
+list1 = ['Asia','Afrika','Northamerika','Southamerika','Antarctica','Europe','Australia'];
+ 
+# Funktion um eine Datenbank zu erstellen falls noch keine mit dem Namen 'Datenbank_Ermias-Bohn' erstellt wurde. Den Code für die erstellung einer neuen
+# Datenbank falls keine exsistiert habe ich im Internet gefunden, dieser Teil ist Markiert.
+def database():
+   name1 = Fullname.get()
+   email = Email.get()
+   gender = var.get()
+   country = c.get()
+   conn = sqlite3.connect('Datenbank_Ermias-Bohn.db')
+   with conn:
+      cursor=conn.cursor()
+   #---
+   cursor.execute('CREATE TABLE IF NOT EXISTS register (Fullname TEXT,Email TEXT,Gender TEXT,country TEXT)')
+   cursor.execute('INSERT INTO register (FullName,Email,Gender,country) VALUES(?,?,?,?)',(name1,email,gender,country))
+   #---
+   conn.commit()
+ 
+# Register Label  
+label_0 = Label(root, text="Register yourself.",width=20,font=("bold", 20))
+label_0.place(x=90,y=53)
+ 
+ 
+# Namenseingabe Label. - Da es ein Eintrag ist habe ich noch ein Entry erstellt.
+label_1 = Label(root, text="FullName",width=20,font=("bold", 10))
+label_1.place(x=80,y=130)
+ 
+entry_1 = Entry(root,textvar=Fullname)
+entry_1.place(x=240,y=130)
+ 
+ 
+# Email Label. - Da es ein Eintrag ist habe ich noch ein Entry erstellt.
+label_2 = Label(root, text="Email",width=20,font=("bold", 10))
+label_2.place(x=68,y=180)
+ 
+entry_2 = Entry(root,textvar=Email)
+entry_2.place(x=240,y=180)
+ 
+ 
+# Gender Auswahl. - Mit 'Radiobutton' habe ich eine auswahl erstellt.
+label_3 = Label(root, text="Gender",width=20,font=("bold", 10))
+label_3.place(x=70,y=230)
+ 
+Radiobutton(root, text="Male",padx = 5, variable=var, value=1).place(x=235,y=230)
+Radiobutton(root, text="Female",padx = 20, variable=var, value=2).place(x=290,y=230)
+ 
+ 
+# Continent Label. - Mit einer 'droplist' habe ich die Continet Auswahl erstellt.
+label_4 = Label(root, text="Continent",width=20,font=("bold", 10))
+label_4.place(x=70,y=280)
+ 
+droplist=OptionMenu(root,c, *list1)
+droplist.config(width=20)
+c.set('Select your continent')
+droplist.place(x=240,y=280)
+ 
+# Submit Button.
+Button(root, text='Submit',width=20,bg='brown',fg='white',command=database).place(x=180,y=330)
+ 
+ 
+# Label zur abtrennung.
+label_5 = Label(root, text="_____________________________________________________",width=45,font=("bold", 10))
+label_5.place(x=70,y=360)
+ 
+ 
+# Zeigt an was in der Datenbank ist.
+label_6 = Label(root, text="Existing entries:",width=20,font=("bold", 10))
+label_6.place(x=180,y=390)
+ 
+root.mainloop()
